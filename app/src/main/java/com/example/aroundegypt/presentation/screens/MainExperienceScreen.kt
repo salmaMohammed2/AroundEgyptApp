@@ -18,15 +18,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -45,6 +43,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -119,7 +118,6 @@ fun MainExperienceScreen(navHostController: NavHostController, modifier: Modifie
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     query: String,
@@ -127,76 +125,87 @@ fun SearchBar(
     onClearQuery: () -> Unit,
     onSearch: () -> Unit,
 ) {
-    Row(modifier = Modifier.padding(bottom = 1.dp)) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Image(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(end = 8.dp)
                 .clickable {},
             painter = painterResource(id = R.drawable.ic_menu),
-            contentDescription = "",
+            contentDescription = "Menu Icon"
         )
 
-        OutlinedTextField(
-            value = query,
-            onValueChange = onQueryChange,
-            placeholder = {
-                Text(
-                    modifier = Modifier.padding(0.dp),
-                    text = stringResource(id = R.string.try_luxor),
-                    color = colorResource(id = R.color.black),
-                    fontSize = 12.sp,
-                    maxLines = 1
-                )
-            },
-            trailingIcon = {
-                if (query.isNotEmpty()) {
-                    IconButton(onClick = onClearQuery) {
+        Box(
+            modifier = Modifier
+                .padding(12.dp)
+                .weight(1f)
+                .height(36.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(colorResource(id = R.color.gray))
+                .padding(start = 20.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            BasicTextField(
+                value = query,
+                onValueChange = onQueryChange,
+                textStyle = TextStyle(
+                    fontSize = 18.sp,
+                    color = Color.Black
+                ),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = { onSearch() }),
+                decorationBox = { innerTextField ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Icon(
-                            modifier = Modifier.size(16.dp),
-                            painter = painterResource(id = R.drawable.ic_close),
-                            contentDescription = "Clear Icon", tint = Color.Gray
+                            painter = painterResource(id = R.drawable.ic_search),
+                            contentDescription = "Search Icon",
+                            tint = Color.Gray
                         )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Box(
+                            modifier = Modifier.weight(1f),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            if (query.isEmpty()) {
+                                Text(
+                                    text = stringResource(id = R.string.try_luxor),
+                                    fontSize = 18.sp,
+                                    color = Color.Gray
+                                )
+                            }
+                            innerTextField()
+                        }
+                        if (query.isNotEmpty()) {
+                            IconButton(onClick = onClearQuery) {
+                                Icon(
+                                    modifier = Modifier.size(18.dp),
+                                    painter = painterResource(id = R.drawable.ic_close),
+                                    contentDescription = "Clear Icon",
+                                    tint = Color.Gray
+                                )
+                            }
+                        }
                     }
                 }
-            },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_search),
-                    contentDescription = "Search Icon",
-                    tint = Color.Gray
-                )
-            },
-            modifier = Modifier
-                .padding(vertical = 4.dp)
-                .height(50.dp)
-                .weight(0.3f)
-                .clip(RoundedCornerShape(8.dp))
-                .background(colorResource(id = R.color.gray)),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Search
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    onSearch()
-                }
-            ),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                unfocusedBorderColor = Color.Transparent,
-                focusedBorderColor = Color.Transparent
-            ),
-
             )
+        }
 
         Image(
             modifier = Modifier
-                .padding(10.dp)
                 .clickable {},
             painter = painterResource(id = R.drawable.ic_filter),
-            contentDescription = "",
+            contentDescription = "Filter Icon"
         )
     }
 }
+
 
 @Composable
 fun WelcomeArea() {

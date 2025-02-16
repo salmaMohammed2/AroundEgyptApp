@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Around Egypt</string>
+    <string name="try_luxor">Try ""Luxor""</string>
+    <string name="welcome">Welcome!</string>
+    <string name="welcome_text">Now you can explore any experience in 360 \ndegrees and get all the details about it all in \none place.</string>
+    <string name="recommended_experience">Recommended Experiences</string>
+    <string name="recent_experience">Recent Experiences</string>
+    <string name="description">Description</string>
+    <string name="explore_now">"EXPLORE NOW"</string>
+</resources>
